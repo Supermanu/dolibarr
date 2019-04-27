@@ -926,6 +926,7 @@ class ExtraFields
 		}
 		else	// Old usage
 		{
+
 			$label=$this->attribute_label[$key];
 			$type =$this->attribute_type[$key];
 			$size =$this->attribute_size[$key];
@@ -1444,6 +1445,9 @@ class ExtraFields
 		 if ($type == 'date') $out.=' (YYYY-MM-DD)';
 		 elseif ($type == 'datetime') $out.=' (YYYY-MM-DD HH:MM:SS)';
 		 */
+		 if (! empty($help)) {
+			$out .= $form->textwithpicto("", $help);
+		 }
 		return $out;
 	}
 

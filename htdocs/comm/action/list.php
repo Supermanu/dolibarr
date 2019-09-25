@@ -40,6 +40,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 $langs->loadLangs(array("users","companies","agenda","commercial","other"));
 
 $action=GETPOST('action', 'alpha');
+$massaction=GETPOST('massaction','alpha');
+$toselect = GETPOST('toselect', 'array');
+$confirm=GETPOST('confirm','alpha');
 $contextpage=GETPOST('contextpage', 'aZ')?GETPOST('contextpage', 'aZ'):'actioncommlist';   // To manage different context of search
 $resourceid=GETPOST("search_resourceid", "int")?GETPOST("search_resourceid", "int"):GETPOST("resourceid", "int");
 $pid=GETPOST("search_projectid", 'int', 3)?GETPOST("search_projectid", 'int', 3):GETPOST("projectid", 'int', 3);
@@ -149,6 +152,8 @@ if (is_array($extrafields->attribute_label) && count($extrafields->attribute_lab
  *	Actions
  */
 
+if (GETPOST('cancel','alpha')) { $action='list'; $massaction=''; }
+
 if (GETPOST("viewcal") || GETPOST("viewweek") || GETPOST("viewday"))
 {
 	$param='';
@@ -181,6 +186,16 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
     $dateend='';
     $status='';
     $search_array_options=array();
+}
+
+if (empty($reshook))
+{
+	$objectclass='ActionComm';
+	$objectlabel='Events';
+	$uploaddir = true;
+	// Only users that can delete any event can remove records.
+	$permtodelete = $user->rights->agenda->allactions->delete;
+	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
 
@@ -359,6 +374,8 @@ if ($resql)
 
 	$num = $db->num_rows($resql);
 
+	$arrayofselected=is_array($toselect)?$toselect:array();
+
 	// Local calendar
 	$newtitle ='<div class="nowrap clear inline-block minheight20"><input type="checkbox" id="check_mytasks" name="check_mytasks" checked disabled> ' . $langs->trans("LocalAgenda").' &nbsp; </div>';
 	//$newtitle=$langs->trans($title);
@@ -366,6 +383,15 @@ if ($resql)
 	$tabactive='cardlist';
 
 	$head = calendars_prepare_head($param);
+
+	$massactionbutton = '';
+	if ($user->rights->agenda->allactions->delete)
+	{
+		// List of mass actions available
+		$arrayofmassactions = array();
+		$arrayofmassactions['predelete']=$langs->trans("Delete");
+		$massactionbutton=$form->selectMassAction('', $arrayofmassactions);
+	}
 
 	print '<form method="POST" id="searchFormList" class="listactionsfilter" action="'.$_SERVER["PHP_SELF"].'">'."\n";
 
@@ -436,7 +462,9 @@ if ($resql)
         $newcardbutton.= dolGetButtonTitle($langs->trans('AddAction'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/comm/action/card.php?action=create&datep='.sprintf("%04d%02d%02d", $tmpforcreatebutton['year'], $tmpforcreatebutton['mon'], $tmpforcreatebutton['mday']).$hourminsec.'&backtopage='.urlencode($_SERVER["PHP_SELF"].($newparam?'?'.$newparam:'')));
     }
 
-    print_barre_liste($s, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num, -1 * $nbtotalofrecords, '', 0, $nav.$newcardbutton, '', $limit);
+    print_barre_liste($s, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, -1 * $nbtotalofrecords, '', 0, $nav.$newcardbutton, '', $limit);
+
+    include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
     $moreforfilter='';
 
@@ -727,7 +755,15 @@ if ($resql)
 			$datep=$db->jdate($obj->datep);
 			print '<td align="center" class="nowrap">'.$actionstatic->LibStatut($obj->percent, 3, 0, $datep).'</td>';
 		}
-		print '<td></td>';
+		// Action column
+		print '<td class="nowrap" align="center">';
+		if ($massactionbutton || $massaction)   // If we are in select mode (massactionbutton defined) or if we have already selected and sent an action ($massaction) defined
+		{
+			$selected=0;
+			if (in_array($obj->id, $arrayofselected)) $selected=1;
+			print '<input id="cb'.$obj->id.'" class="flat checkforselect" type="checkbox" name="toselect[]" value="'.$obj->id.'"'.($selected?' checked="checked"':'').'>';
+		}
+		print '</td>';
 
 		print "</tr>\n";
 		$i++;

@@ -167,7 +167,7 @@ if ($action == 'confirm_clone' && $confirm == 'yes')
             }
 			$result = $object->createFromClone($user, GETPOST('fk_userowner'), GETPOST('socid'));
 			if ($result > 0) {
-				header("Location: " . $_SERVER['PHP_SELF'] . '?id=' . $result);
+				header("Location: " . $_SERVER['PHP_SELF'] . '?action=edit&id=' . $result);
 				exit();
 			} else {
 				setEventMessages($object->error, $object->errors, 'errors');

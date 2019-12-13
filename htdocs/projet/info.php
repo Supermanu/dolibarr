@@ -146,8 +146,7 @@ print '<div class="clearboth"></div>';
 
 dol_fiche_end();
 
-
-// Actions buttons
+print "<p><a href='/comm/action/list.php?search_projectid=". $object->id ."' class='butAction'>Voir les événements du projet dans l'agenda</a></p>";
 
 $out = '';
 $permok = $user->rights->agenda->myactions->create;

@@ -49,6 +49,9 @@ $optioncss = GETPOST('optioncss', 'alpha');
 $year = GETPOST("year", 'int');
 $month = GETPOST("month", 'int');
 $day = GETPOST("day", 'int');
+$toselect = GETPOST('toselect', 'array');
+$confirm = GETPOST('confirm','alpha');
+
 // Set actioncode (this code must be same for setting actioncode into peruser, listacton and index)
 if (GETPOST('search_actioncode', 'array'))
 {
@@ -154,6 +157,11 @@ $arrayfields = dol_sort_array($arrayfields, 'position');
  *	Actions
  */
 
+if (GETPOST('cancel','alpha'))
+{
+	$action='list'; $massaction='';
+}
+
 if (GETPOST("viewcal") || GETPOST("viewweek") || GETPOST("viewday"))
 {
 	$param = '';
@@ -188,6 +196,17 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
     $search_array_options = array();
 }
 
+
+// As mass deletion happens with a confirm step, $massaction is not use for the final step (deletion).
+if (empty($reshook))
+{
+	$objectclass = 'ActionComm';
+	$objectlabel = 'Events';
+	$uploaddir = true;
+	// Only users that can delete any event can remove records.
+	$permissiontodelete = $user->rights->agenda->allactions->delete;
+	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
+}
 
 /*
  *  View
@@ -238,6 +257,19 @@ if (GETPOST('dateendyear', 'int')) $param .= '&dateendyear='.GETPOST('dateendyea
 if ($optioncss != '') $param .= '&optioncss='.urlencode($optioncss);
 // Add $param from extra fields
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_param.tpl.php';
+
+// List of mass actions available
+$arrayofmassactions = array(
+	'set_all_events_to_todo' => $langs->trans("SetAllEventsToTodo"),
+	'set_all_events_to_in_progress' => $langs->trans("SetAllEventsToInProgress"),
+	'set_all_events_to_finished' => $langs->trans("SetAllEventsToFinished"),
+);
+if ($user->rights->agenda->allactions->delete)
+{
+	$arrayofmassactions['predelete'] = '<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
+}
+
+$massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
 $sql = "SELECT";
 if ($usergroup > 0) $sql .= " DISTINCT";
@@ -444,6 +476,8 @@ if ($resql)
     }
 
     print_barre_liste($s, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, '', $num, -1 * $nbtotalofrecords, '', 0, $nav.$newcardbutton, '', $limit);
+
+    include DOL_DOCUMENT_ROOT.'/core/tpl/massactions_pre.tpl.php';
 
     $moreforfilter = '';
 

@@ -290,16 +290,16 @@ class FormActions
 	        		// Label
 	        		print '<td>'.$label.'</td>';
 	        		// Date
-	        		print '<td class="center">'.dol_print_date($actioncomm->datep, 'dayhour', 'tzuserrel');
+	        		print '<td class="center">'.dol_print_date($actioncomm->datep, 'dayhour');
 	        		if ($actioncomm->datef)
 	        		{
 		        		$tmpa = dol_getdate($actioncomm->datep);
 		        		$tmpb = dol_getdate($actioncomm->datef);
 		        		if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year'])
 		        		{
-		        			if ($tmpa['hours'] != $tmpb['hours'] || $tmpa['minutes'] != $tmpb['minutes'] && $tmpa['seconds'] != $tmpb['seconds']) print '-'.dol_print_date($actioncomm->datef, 'hour', 'tzuserrel');
+		        			if ($tmpa['hours'] != $tmpb['hours'] || $tmpa['minutes'] != $tmpb['minutes'] && $tmpa['seconds'] != $tmpb['seconds']) print '-'.dol_print_date($actioncomm->datef, 'hour');
 		        		}
-		        		else print '-'.dol_print_date($actioncomm->datef, 'dayhour', 'tzuserrel');
+		        		else print '-'.dol_print_date($actioncomm->datef, 'dayhour');
 	        		}
 	        		print '</td>';
 	        		print '<td class="right">';

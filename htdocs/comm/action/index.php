@@ -90,6 +90,13 @@ $status = GETPOST("search_status", 'aZ09') ?GETPOST("search_status", 'aZ09') : G
 $type = GETPOST("search_type", 'aZ09') ?GETPOST("search_type", 'aZ09') : GETPOST("type", 'aZ09');
 $maxprint = (isset($_GET["maxprint"]) ?GETPOST("maxprint") : $conf->global->AGENDA_MAX_EVENTS_DAY_VIEW);
 $optioncss = GETPOST('optioncss', 'aZ'); // Option for the css output (always '' except when 'print')
+$dateselect=dol_mktime(0, 0, 0, GETPOST('dateselectmonth', 'int'), GETPOST('dateselectday', 'int'), GETPOST('dateselectyear', 'int'));
+if ($dateselect > 0)
+{
+	$day=GETPOST('dateselectday', 'int');
+	$month=GETPOST('dateselectmonth', 'int');
+	$year=GETPOST('dateselectyear', 'int');
+}
 // Set actioncode (this code must be same for setting actioncode into peruser, listacton and index)
 if (GETPOST('search_actioncode', 'array'))
 {
@@ -373,6 +380,8 @@ if ($action == 'show_day')
     $picto = 'calendarday';
 }
 
+$nav .= $form->selectDate($dateselect, 'dateselect', 0, 0, 1, '', 1, 0);
+$nav .= ' <input type="submit" name="submitdateselect" class="button" value="'.$langs->trans("Refresh").'">';
 // Must be after the nav definition
 $param .= '&year='.$year.'&month='.$month.($day ? '&day='.$day : '');
 //print 'x'.$param;

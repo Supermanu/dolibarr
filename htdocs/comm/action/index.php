@@ -461,7 +461,7 @@ if (!empty($conf->use_javascript_ajax))	// If javascript on
 	}
 
 	// Birthdays
-	$s .= '<div class="nowrap inline-block"><input type="checkbox" id="check_birthday" name="check_birthday"> '.$langs->trans("AgendaShowBirthdayEvents").' &nbsp; </div>';
+	$s .= '<div class="nowrap inline-block"><input type="checkbox" id="check_birthday" name="check_birthday" checked> '.$langs->trans("AgendaShowBirthdayEvents").' &nbsp; </div>';
 
 	// Calendars from hooks
     $parameters = array(); $object = null;

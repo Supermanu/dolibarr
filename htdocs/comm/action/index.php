@@ -1853,7 +1853,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 				} else {
 					print '<a href="'.DOL_URL_ROOT.'/comm/action/index.php?action='.$action.'&maxprint=0&month='.$monthshown.'&year='.$year;
 					print ($status ? '&status='.$status : '').($filter ? '&filter='.$filter : '');
-					print (!empty($filtert) ? '&search_filtert='.$filtert : '');
+					print (!empty($filtert) ? '&search_filtert='.implode(",", $filtert) : '');
 					print ($usergroup ? '&search_usergroup='.$usergroup : '');
 					print ($actioncode != '' ? '&search_actioncode='.$actioncode : '');
 					print '">'.img_picto("all", "1downarrow_selected.png").' ...';

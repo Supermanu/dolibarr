@@ -418,8 +418,7 @@ if (!empty($conf->use_javascript_ajax))	// If javascript on
 	$s .= "\n".'<!-- Div to calendars selectors -->'."\n";
 	$s .= '<script type="text/javascript">'."\n";
 	$s .= 'jQuery(document).ready(function () {'."\n";
-	$s .= 'jQuery("#check_birthday").click(function() { console.log("Toggle birthday"); jQuery(".family_birthday").toggle(); });'."\n";
-	$s .= 'jQuery(".family_birthday").toggle();'."\n";
+	$s .= 'jQuery("#check_birthday").click(function() { console.log("Toggle birthday"); jQuery(".family_birthday").toggle();});'."\n";
 	if ($action == "show_week" || $action == "show_month" || empty($action))
 	{
         // Code to enable drag and drop

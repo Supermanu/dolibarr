@@ -341,7 +341,7 @@ if (empty($reshook) && $action == 'add')
 		$action = 'create';
 		setEventMessages($langs->trans("ErrorFieldRequired", $langs->transnoentitiesnoconv("ActionsOwnedBy")), null, 'errors');
 	}
-	if ($object->type_code == 'AC_RDV' && ($datep == '' || ($datef == '' && empty($fulldayevent))))
+	if ($datep == '' || ($datef == '' && empty($fulldayevent)))
 	{
 		$error++; $donotclearsession = 1;
 		$action = 'create';
@@ -919,8 +919,6 @@ if ($action == 'create')
 							$("#p2").val($("#ap").val());
 						}
 					});
-                    if ($("#actioncode").val() == \'AC_RDV\') $("#dateend").addClass("fieldrequired");
-                    else $("#dateend").removeClass("fieldrequired");
                     setdatefields();
                })';
 		print '</script>'."\n";

@@ -149,18 +149,22 @@ if (empty($reshook) && (GETPOST('removedassigned') || GETPOST('removedassigned')
 	$listUserAssignedUpdated = true;
 }
 
-// Add user to assigned list
-if (empty($reshook) && (GETPOST('addassignedtouser') || GETPOST('updateassignedtouser')))
+// Add users to assigned list
+if (empty($reshook) && GETPOST('addassignedtouser') || GETPOST('updateassignedtouser'))
 {
-	// Add a new user
-	if (GETPOST('assignedtouser') > 0)
+	// Add a new users
+	if (! empty(GETPOST('assignedtouser')))
 	{
 		$assignedtouser = array();
 		if (!empty($_SESSION['assignedtouser']))
 		{
 			$assignedtouser = json_decode($_SESSION['assignedtouser'], true);
 		}
-		$assignedtouser[GETPOST('assignedtouser')] = array('id'=>GETPOST('assignedtouser'), 'transparency'=>GETPOST('transparency'), 'mandatory'=>1);
+		$transparency = GETPOST('transparency', 1);
+		foreach (GETPOST('assignedtouser') as $userid)
+		{
+			$assignedtouser[$userid] = array('id'=>$userid, 'transparency'=>$transparency, 'mandatory'=>1);
+		}
 		$_SESSION['assignedtouser'] = json_encode($assignedtouser);
 	}
 	$donotclearsession = 1;
@@ -1071,6 +1075,7 @@ if ($action == 'create')
 	$listofuserid = array();
 	$listofcontactid = array();
 	$listofotherid = array();
+	$excludeduser = array($user->id);
 
 	if (empty($donotclearsession))
 	{
@@ -1083,12 +1088,13 @@ if ($action == 'create')
 		if (!empty($_SESSION['assignedtouser']))
 		{
 			$listofuserid = json_decode($_SESSION['assignedtouser'], true);
+			$excludeduser = array_keys($listofuserid);
 		}
 		$firstelem = reset($listofuserid);
 		if (isset($listofuserid[$firstelem['id']])) $listofuserid[$firstelem['id']]['transparency'] = (GETPOSTISSET('transparency') ? GETPOST('transparency', 'alpha') : 0); // 0 by default when refreshing
 	}
 	print '<div class="assignedtouser">';
-	print $form->select_dolusers_forevent(($action == 'create' ? 'add' : 'update'), 'assignedtouser', 1, '', 0, '', '', 0, 0, 0, 'AND u.statut != 0', 1, $listofuserid, $listofcontactid, $listofotherid);
+	print $form->select_dolusers_forevent(($action == 'create'?'add':'update'), 'assignedtouser', 1, $excludeduser, 0, '', '', 0, 0, 0, 'AND u.statut != 0', 1, $listofuserid, $listofcontactid, $listofotherid);
 	print '</div>';
 	print '</td></tr>';
 
@@ -1516,6 +1522,7 @@ if ($id > 0)
 
 		// Assigned to
 		$listofuserid = array(); // User assigned
+		$excludeduser = array($object->userownerid);
 		if (empty($donotclearsession))
 		{
 			if ($object->userownerid > 0)
@@ -1546,6 +1553,7 @@ if ($id > 0)
 			if (!empty($_SESSION['assignedtouser']))
 			{
 				$listofuserid = json_decode($_SESSION['assignedtouser'], true);
+				$excludeduser = array_keys($listofuserid);
 			}
 		}
 		$listofcontactid = $object->socpeopleassigned; // Contact assigned
@@ -1553,7 +1561,7 @@ if ($id > 0)
 
 		print '<tr><td class="tdtop nowrap fieldrequired">'.$langs->trans("ActionAssignedTo").'</td><td colspan="3">';
 		print '<div class="assignedtouser">';
-		print $form->select_dolusers_forevent(($action == 'create' ? 'add' : 'update'), 'assignedtouser', 1, '', 0, '', '', 0, 0, 0, 'AND u.statut != 0', 1, $listofuserid, $listofcontactid, $listofotherid);
+		print $form->select_dolusers_forevent(($action == 'create'?'add':'update'), 'assignedtouser', 1, $excludeduser, 0, '', '', 0, 0, 0, 'AND u.statut != 0', 1, $listofuserid, $listofcontactid, $listofotherid);
 		print '</div>';
 		/*if (in_array($user->id,array_keys($listofuserid)))
 		{
@@ -1907,6 +1915,7 @@ if ($id > 0)
 		// Assigned to
 		print '<tr><td class="nowrap">'.$langs->trans("ActionAssignedTo").'</td><td>';
 		$listofuserid = array();
+		$excludeduser = array($object->userownerid);
 		if (empty($donotclearsession))
 		{
 			if ($object->userownerid > 0)
@@ -1932,13 +1941,14 @@ if ($id > 0)
 			if (!empty($_SESSION['assignedtouser']))
 			{
 				$listofuserid = json_decode($_SESSION['assignedtouser'], true);
+				$excludeduser = array_keys($listofuserid);
 			}
 		}
 
 		$listofcontactid = array(); // not used yet
 		$listofotherid = array(); // not used yet
 		print '<div class="assignedtouser">';
-		print $form->select_dolusers_forevent('view', 'assignedtouser', 1, '', 0, '', '', 0, 0, 0, '', ($object->datep != $object->datef) ? 1 : 0, $listofuserid, $listofcontactid, $listofotherid);
+		print $form->select_dolusers_forevent('view', 'assignedtouser', 1, $excludeduser, 0, '', '', 0, 0, 0, '', ($object->datep != $object->datef) ? 1 : 0, $listofuserid, $listofcontactid, $listofotherid);
 		print '</div>';
 		/*
 		if ($object->datep != $object->datef && in_array($user->id,array_keys($listofuserid)))

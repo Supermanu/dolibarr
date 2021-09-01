@@ -87,7 +87,7 @@ function print_actions_filter($form, $canedit, $status, $year, $month, $day, $sh
 		print '<div class="divsearchfield">';
 		print img_picto('', 'user', 'class="fawidth30 inline-block"');
 		print '<span class="hideonsmartphone">'.$langs->trans("ActionsToDoBy").'</span>';
-		print $form->select_dolusers($filtert, 'search_filtert', 1, '', !$canedit, '', '', 0, 0, 0, '', 0, '', 'maxwidth500 widthcentpercentminusxx');
+		print $form->select_dolusers($filtert, 'search_filtert', 1, '', !$canedit, '', '', 0, 0, 0, '', 0, '', 'maxwidth500 widthcentpercentminusxx', 0, 0, true);
 		print '</div>';
 		print '<div class="divsearchfield">';
 		print img_picto('', 'object_group', 'class="fawidth30 inline-block"');

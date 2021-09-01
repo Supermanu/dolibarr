@@ -46,14 +46,22 @@ if (empty($conf->global->AGENDA_EXT_NB)) $conf->global->AGENDA_EXT_NB = 5;
 $MAXAGENDA = $conf->global->AGENDA_EXT_NB;
 
 $filter = GETPOST("search_filter", 'alpha', 3) ?GETPOST("search_filter", 'alpha', 3) : GETPOST("filter", 'alpha', 3);
-$filtert = GETPOST("search_filtert", "int", 3) ?GETPOST("search_filtert", "int", 3) : GETPOST("filtert", "int", 3);
+
+if (GETPOST("search_filtert"))
+{
+	$filtert = is_string(GETPOST("search_filtert")) ? explode(",", GETPOST("search_filtert")) : GETPOST("search_filtert");
+} else
+{
+	$filtert = GETPOST("filtert");
+}
+
 $usergroup = GETPOST("search_usergroup", "int", 3) ?GETPOST("search_usergroup", "int", 3) : GETPOST("usergroup", "int", 3);
 $showbirthday = empty($conf->use_javascript_ajax) ?GETPOST("showbirthday", "int") : 1;
 
 // If not choice done on calendar owner (like on left menu link "Agenda"), we filter on user.
 if (empty($filtert) && empty($conf->global->AGENDA_ALL_CALENDARS))
 {
-	$filtert = $user->id;
+	$filtert = array($user->id);
 }
 
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -76,7 +84,7 @@ if (!$user->rights->agenda->myactions->read) accessforbidden();
 if (!$user->rights->agenda->allactions->read) $canedit = 0;
 if (!$user->rights->agenda->allactions->read || $filter == 'mine')  // If no permission to see all, we show only affected to me
 {
-	$filtert = $user->id;
+	$filtert = array($user->id);
 }
 
 $action = GETPOST('action', 'aZ09');
@@ -343,7 +351,7 @@ if ($actioncode || GETPOSTISSET('search_actioncode')) {
 if ($resourceid > 0)  $param .= "&search_resourceid=".urlencode($resourceid);
 if ($status || GETPOSTISSET('status')) $param .= "&search_status=".urlencode($status);
 if ($filter)       $param .= "&search_filter=".urlencode($filter);
-if ($filtert)      $param .= "&search_filtert=".urlencode($filtert);
+if ($filtert)      $param .= "&search_filtert=".urlencode(implode(",", $filtert));
 if ($usergroup)    $param .= "&search_usergroup=".urlencode($usergroup);
 if ($socid)        $param .= "&search_socid=".urlencode($socid);
 if ($showbirthday) $param .= "&search_showbirthday=1";
@@ -570,7 +578,7 @@ if (!$user->rights->societe->client->voir && !$socid) $sql .= " LEFT JOIN ".MAIN
 // We must filter on resource table
 if ($resourceid > 0) $sql .= ", ".MAIN_DB_PREFIX."element_resources as r";
 // We must filter on assignement table
-if ($filtert > 0 || $usergroup > 0) $sql .= ", ".MAIN_DB_PREFIX."actioncomm_resources as ar";
+if (!empty($filtert) || $usergroup > 0) $sql .= ", ".MAIN_DB_PREFIX."actioncomm_resources as ar";
 if ($usergroup > 0) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."usergroup_user as ugu ON ugu.fk_user = ar.fk_element";
 $sql .= ' WHERE a.fk_action = ca.id';
 $sql .= ' AND a.entity IN ('.getEntity('agenda').')';
@@ -603,7 +611,7 @@ if ($pid) $sql .= " AND a.fk_project=".$db->escape($pid);
 if (!$user->rights->societe->client->voir && !$socid) $sql .= " AND (a.fk_soc IS NULL OR sc.fk_user = ".$user->id.")";
 if ($socid > 0) $sql .= ' AND a.fk_soc = '.$socid;
 // We must filter on assignement table
-if ($filtert > 0 || $usergroup > 0) $sql .= " AND ar.fk_actioncomm = a.id AND ar.element_type='user'";
+if (!empty($filtert) || $usergroup > 0) $sql .= " AND ar.fk_actioncomm = a.id AND ar.element_type='user'";
 //var_dump($day.' '.$month.' '.$year);
 if ($action == 'show_day')
 {
@@ -637,11 +645,15 @@ if ($status == '50') { $sql .= " AND (a.percent > 0 AND a.percent < 100)"; }	// 
 if ($status == 'done' || $status == '100') { $sql .= " AND (a.percent = 100)"; }
 if ($status == 'todo') { $sql .= " AND (a.percent >= 0 AND a.percent < 100)"; }
 // We must filter on assignement table
-if ($filtert > 0 || $usergroup > 0)
+if (!empty($filtert) || $usergroup > 0)
 {
 	$sql .= " AND (";
-	if ($filtert > 0) $sql .= "ar.fk_element = ".$filtert;
-	if ($usergroup > 0) $sql .= ($filtert > 0 ? " OR " : "")." ugu.fk_usergroup = ".$usergroup;
+	for ($u = 0; $u < count($filtert); $u++)
+	{
+		$sql .= "ar.fk_element = ".$filtert[$u]. ($u + 1 == count($filtert) ? "" : " OR ");
+	}
+
+	if ($usergroup > 0) $sql .= (!empty($filtert) ? " OR " : "")." ugu.fk_usergroup = ".$usergroup;
 	$sql .= ")";
 }
 // Sort on date
@@ -1841,7 +1853,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 				} else {
 					print '<a href="'.DOL_URL_ROOT.'/comm/action/index.php?action='.$action.'&maxprint=0&month='.$monthshown.'&year='.$year;
 					print ($status ? '&status='.$status : '').($filter ? '&filter='.$filter : '');
-					print ($filtert ? '&search_filtert='.$filtert : '');
+					print (!empty($filtert) ? '&search_filtert='.$filtert : '');
 					print ($usergroup ? '&search_usergroup='.$usergroup : '');
 					print ($actioncode != '' ? '&search_actioncode='.$actioncode : '');
 					print '">'.img_picto("all", "1downarrow_selected.png").' ...';

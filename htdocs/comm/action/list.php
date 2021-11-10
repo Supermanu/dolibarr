@@ -736,7 +736,7 @@ if ($resql)
 		// Start date
 		if (!empty($arrayfields['a.datep']['checked'])) {
 			print '<td class="center nowraponall">';
-			print dol_print_date($db->jdate($obj->dp), $formatToUse, 'auto');
+			print dol_print_date($db->jdate($obj->dp), $formatToUse, 'tzuser');
 			$late = 0;
 			if ($obj->percent == 0 && $obj->dp && $db->jdate($obj->dp) < ($now - $delay_warning)) $late = 1;
 			if ($obj->percent == 0 && !$obj->dp && $obj->dp2 && $db->jdate($obj->dp) < ($now - $delay_warning)) $late = 1;
@@ -749,7 +749,7 @@ if ($resql)
 		// End date
 		if (!empty($arrayfields['a.datep2']['checked'])) {
 			print '<td class="center nowraponall">';
-			print dol_print_date($db->jdate($obj->dp2), $formatToUse, 'auto');
+			print dol_print_date($db->jdate($obj->dp2), $formatToUse, 'tzuser');
 			print '</td>';
 		}
 
@@ -834,11 +834,11 @@ if ($resql)
 		// Date creation
 		if (!empty($arrayfields['a.datec']['checked'])) {
 			// Status/Percent
-			print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datec), 'dayhour', 'auto').'</td>';
+			print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datec), 'dayhour', 'tzuser').'</td>';
 		}
 		// Date update
 		if (!empty($arrayfields['a.tms']['checked'])) {
-			print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datem), 'dayhour', 'auto').'</td>';
+			print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datem), 'dayhour', 'tzuser').'</td>';
 		}
 		if (!empty($arrayfields['a.percent']['checked'])) {
 			// Status/Percent

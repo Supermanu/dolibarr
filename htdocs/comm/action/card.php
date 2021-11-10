@@ -232,8 +232,8 @@ if (empty($reshook) && $action == 'add')
 	$percentage = in_array(GETPOST('status'), array(-1, 100)) ?GETPOST('status') : (in_array(GETPOST('complete'), array(-1, 100)) ?GETPOST('complete') : GETPOST("percentage")); // If status is -1 or 100, percentage is not defined and we must use status
 
 	// Clean parameters
-	$datep = dol_mktime($fulldayevent ? '00' : GETPOST("aphour", 'int'), $fulldayevent ? '00' : GETPOST("apmin", 'int'), $fulldayevent ? '00' : GETPOST("apsec", 'int'), GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'), 'auto');
-	$datef = dol_mktime($fulldayevent ? '23' : GETPOST("p2hour", 'int'), $fulldayevent ? '59' : GETPOST("p2min", 'int'), $fulldayevent ? '59' : GETPOST("apsec", 'int'), GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'), 'auto');
+	$datep = dol_mktime($fulldayevent ? '00' : GETPOST("aphour", 'int'), $fulldayevent ? '00' : GETPOST("apmin", 'int'), $fulldayevent ? '00' : GETPOST("apsec", 'int'), GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'), 'tzuser');
+	$datef = dol_mktime($fulldayevent ? '23' : GETPOST("p2hour", 'int'), $fulldayevent ? '59' : GETPOST("p2min", 'int'), $fulldayevent ? '59' : GETPOST("apsec", 'int'), GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'), 'tzuser');
 
 	// Check parameters
 	if (!$datef && $percentage == 100)
@@ -483,8 +483,8 @@ if (empty($reshook) && $action == 'update')
 		$object->fetch_userassigned();
 		$object->oldcopy = clone $object;
 
-		$datep = dol_mktime($fulldayevent ? '00' : $aphour, $fulldayevent ? '00' : $apmin, 0, GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'), 'auto');
-		$datef = dol_mktime($fulldayevent ? '23' : $p2hour, $fulldayevent ? '59' : $p2min, $fulldayevent ? '59' : '0', GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'), 'auto');
+		$datep = dol_mktime($fulldayevent ? '00' : $aphour, $fulldayevent ? '00' : $apmin, 0, GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'), 'tzuser');
+		$datef = dol_mktime($fulldayevent ? '23' : $p2hour, $fulldayevent ? '59' : $p2min, $fulldayevent ? '59' : '0', GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'), 'tzuser');
 
 		$object->type_id     = dol_getIdFromCode($db, GETPOST("actioncode", 'aZ09'), 'c_actioncomm');
 		$object->label       = GETPOST("label", "alphanohtml");
@@ -734,8 +734,8 @@ if (empty($reshook) && GETPOST('actionmove', 'alpha') == 'mupdate')
 {
 	$error = 0;
 
-	$shour = dol_print_date($object->datep, "%H", 'autorel');		// We take the date visible by user $newdate is also date visible by user.
-	$smin = dol_print_date($object->datep, "%M", 'autorel');
+	$shour = dol_print_date($object->datep, "%H", 'tzuserrel');		// We take the date visible by user $newdate is also date visible by user.
+	$smin = dol_print_date($object->datep, "%M", 'tzuserrel');
 
 	$newdate = GETPOST('newdate', 'alpha');
 	if (empty($newdate) || strpos($newdate, 'dayevent_') != 0)
@@ -744,7 +744,7 @@ if (empty($reshook) && GETPOST('actionmove', 'alpha') == 'mupdate')
 		exit;
 	}
 
-	$datep = dol_mktime($shour, $smin, 0, substr($newdate, 13, 2), substr($newdate, 15, 2), substr($newdate, 9, 4), 'autorel');
+	$datep = dol_mktime($shour, $smin, 0, substr($newdate, 13, 2), substr($newdate, 15, 2), substr($newdate, 9, 4), 'tzuserrel');
 	//print dol_print_date($datep, 'dayhour');exit;
 
 	if ($datep != $object->datep)
@@ -1331,8 +1331,8 @@ if ($id > 0)
 	{
 		$percentage = in_array(GETPOST('status'), array(-1, 100)) ?GETPOST('status') : (in_array(GETPOST('complete'), array(-1, 100)) ?GETPOST('complete') : GETPOST("percentage")); // If status is -1 or 100, percentage is not defined and we must use status
 
-		$datep = dol_mktime($fulldayevent ? '00' : $aphour, $fulldayevent ? '00' : $apmin, 0, GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'));
-		$datef = dol_mktime($fulldayevent ? '23' : $p2hour, $fulldayevent ? '59' : $p2min, $fulldayevent ? '59' : '0', GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'));
+		$datep = dol_mktime($fulldayevent ? '00' : $aphour, $fulldayevent ? '00' : $apmin, 0, GETPOST("apmonth", 'int'), GETPOST("apday", 'int'), GETPOST("apyear", 'int'), 'tzuser');
+		$datef = dol_mktime($fulldayevent ? '23' : $p2hour, $fulldayevent ? '59' : $p2min, $fulldayevent ? '59' : '0', GETPOST("p2month", 'int'), GETPOST("p2day", 'int'), GETPOST("p2year", 'int'), 'tzuser');
 
 		$object->type_id     = dol_getIdFromCode($db, GETPOST("actioncode", 'aZ09'), 'c_actioncomm');
 		$object->label       = GETPOST("label", "alphanohtml");
@@ -1441,19 +1441,19 @@ if ($id > 0)
 		// Date start - end
 		print '<tr><td class="nowrap"><span class="fieldrequired">'.$langs->trans("DateActionStart").' - '.$langs->trans("DateActionEnd").'</span></td><td colspan="3">';
 		if (GETPOST("afaire") == 1) {
-			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 0, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 0, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'tzuser');
 		} elseif (GETPOST("afaire") == 2) {
-			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 1, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 1, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'tzuser');
 		} else {
-			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 1, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datep ? $datep : $object->datep, 'ap', 1, 1, 1, "action", 1, 1, 0, 'fulldaystart', '', '', '', 1, '', '', 'tzuser');
 		}
 		print ' - ';
 		if (GETPOST("afaire") == 1) {
-			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'tzuser');
 		} elseif (GETPOST("afaire") == 2) {
-			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'tzuser');
 		} else {
-			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'auto');
+			print $form->selectDate($datef ? $datef : $object->datef, 'p2', 1, 1, 1, "action", 1, 1, 0, 'fulldayend', '', '', '', 1, '', '', 'tzuser');
 		}
 		print '</td></tr>';
 
@@ -1893,16 +1893,16 @@ if ($id > 0)
 
 		// Date start
 		print '<tr><td>'.$langs->trans("DateActionStart").'</td><td>';
-		if (!$object->fulldayevent) print dol_print_date($object->datep, 'dayhour', 'auto');
-		else print dol_print_date($object->datep, 'day', 'auto');
+		if (!$object->fulldayevent) print dol_print_date($object->datep, 'dayhour', 'tzuser');
+		else print dol_print_date($object->datep, 'day', 'tzuser');
 		if ($object->percentage == 0 && $object->datep && $object->datep < ($now - $delay_warning)) print img_warning($langs->trans("Late"));
 		print '</td>';
 		print '</tr>';
 
 		// Date end
 		print '<tr><td>'.$langs->trans("DateActionEnd").'</td><td>';
-		if (!$object->fulldayevent) print dol_print_date($object->datef, 'dayhour', 'auto');
-		else print dol_print_date($object->datef, 'day', 'auto');
+		if (!$object->fulldayevent) print dol_print_date($object->datef, 'dayhour', 'tzuser');
+		else print dol_print_date($object->datef, 'day', 'tzuser');
 		if ($object->percentage > 0 && $object->percentage < 100 && $object->datef && $object->datef < ($now - $delay_warning)) print img_warning($langs->trans("Late"));
 		print '</td></tr>';
 

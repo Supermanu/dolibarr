@@ -202,7 +202,7 @@ class FormActions
 			$newcardbutton = '';
 			if (!empty($conf->agenda->enabled) && !empty($user->rights->agenda->myactions->create))
 			{
-				$newcardbutton .= dolGetButtonTitle($langs->trans("AddEvent"), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/comm/action/card.php?action=create&amp;datep='.urlencode(dol_print_date(dol_now(), 'dayhourlog', 'auto')).'&amp;origin='.urlencode($typeelement).'&amp;originid='.$object->id.($object->socid > 0 ? '&amp;socid='.$object->socid : ($socid > 0 ? '&amp;socid='.$socid : '')).($projectid > 0 ? '&amp;projectid='.$projectid : '').'&amp;backtopage='.urlencode($urlbacktopage));
+				$newcardbutton .= dolGetButtonTitle($langs->trans("AddEvent"), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/comm/action/card.php?action=create&amp;datep='.urlencode(dol_print_date(dol_now(), 'dayhourlog', 'tzuser')).'&amp;origin='.urlencode($typeelement).'&amp;originid='.$object->id.($object->socid > 0 ? '&amp;socid='.$object->socid : ($socid > 0 ? '&amp;socid='.$socid : '')).($projectid > 0 ? '&amp;projectid='.$projectid : '').'&amp;backtopage='.urlencode($urlbacktopage));
 			}
 
 
@@ -296,7 +296,7 @@ class FormActions
 						$tmpb = dol_getdate($actioncomm->datef);
 						if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year'])
 						{
-							if ($tmpa['hours'] != $tmpb['hours'] || $tmpa['minutes'] != $tmpb['minutes'] && $tmpa['seconds'] != $tmpb['seconds']) print '-'.dol_print_date($actioncomm->datef, 'hour', 'auto');
+							if ($tmpa['hours'] != $tmpb['hours'] || $tmpa['minutes'] != $tmpb['minutes'] && $tmpa['seconds'] != $tmpb['seconds']) print '-'.dol_print_date($actioncomm->datef, 'hour', 'tzuserrel');
 						} else print '-'.dol_print_date($actioncomm->datef, 'dayhour');
 					}
 					print '</td>';

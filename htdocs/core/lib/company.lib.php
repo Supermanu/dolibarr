@@ -1216,10 +1216,10 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = '', $noprin
 	$tms_end = '';
 
 	if (!empty($start_year) && !empty($start_month) && !empty($start_day)) {
-		$tms_start = dol_mktime(0, 0, 0, $start_month, $start_day, $start_year, 'auto');
+		$tms_start = dol_mktime(0, 0, 0, $start_month, $start_day, $start_year, 'tzuserrel');
 	}
 	if (!empty($end_year) && !empty($end_month) && !empty($end_day)) {
-		$tms_end = dol_mktime(23, 59, 59, $end_month, $end_day, $end_year, 'auto');
+		$tms_end = dol_mktime(23, 59, 59, $end_month, $end_day, $end_year, 'tzuserrel');
 	}
 	if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x', 'alpha') || GETPOST('button_removefilter', 'alpha')) { // All test are required to be compatible with all browsers
 		$tms_start = '';
@@ -1233,7 +1233,7 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = '', $noprin
 	$out = '';
 	$histo = array();
 	$numaction = 0;
-	$now = dol_now('auto');
+	$now = dol_now('tzuser');
 
 	// Open DSI -- Fix order by -- Begin
 	$sortfield_list = explode(',', $sortfield);
@@ -1618,12 +1618,12 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = '', $noprin
 
 			// Date
 			$out .= '<td class="center nowrap">';
-			$out .= dol_print_date($histo[$key]['datestart'], 'dayhour', 'auto');
+			$out .= dol_print_date($histo[$key]['datestart'], 'dayhour', 'tzuserrel');
 			if ($histo[$key]['dateend'] && $histo[$key]['dateend'] != $histo[$key]['datestart']) {
 				$tmpa = dol_getdate($histo[$key]['datestart'], true);
 				$tmpb = dol_getdate($histo[$key]['dateend'], true);
-				if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $out .= '-'.dol_print_date($histo[$key]['dateend'], 'hour', 'auto');
-				else $out .= '-'.dol_print_date($histo[$key]['dateend'], 'dayhour', 'auto');
+				if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $out .= '-'.dol_print_date($histo[$key]['dateend'], 'hour', 'tzuserrel');
+				else $out .= '-'.dol_print_date($histo[$key]['dateend'], 'dayhour', 'tzuserrel');
 			}
 			$late = 0;
 			if ($histo[$key]['percent'] == 0 && $histo[$key]['datestart'] && $histo[$key]['datestart'] < ($now - $delay_warning)) $late = 1;

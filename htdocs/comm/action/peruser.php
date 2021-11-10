@@ -1104,13 +1104,13 @@ function show_day_events2($username, $day, $month, $year, $monthshown, $style, &
 						{
 							$busy = $event->transparency;
 							$cases1[$h][$event->id]['busy'] = $busy;
-							$cases1[$h][$event->id]['string'] = dol_print_date($event->date_start_in_calendar, 'dayhour', 'auto');
+							$cases1[$h][$event->id]['string'] = dol_print_date($event->date_start_in_calendar, 'dayhour', 'tzuserrel');
 							if ($event->date_end_in_calendar && $event->date_end_in_calendar != $event->date_start_in_calendar)
 							{
 								$tmpa = dol_getdate($event->date_start_in_calendar, true);
 								$tmpb = dol_getdate($event->date_end_in_calendar, true);
-								if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $cases1[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'hour', 'auto');
-								else $cases1[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'dayhour', 'auto');
+								if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $cases1[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'hour', 'tzuserrel');
+								else $cases1[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'dayhour', 'tzuserrel');
 							}
 							if ($event->label) $cases1[$h][$event->id]['string'] .= ' - '.$event->label;
 							$cases1[$h][$event->id]['typecode'] = $event->type_code;
@@ -1155,7 +1155,7 @@ function show_day_events2($username, $day, $month, $year, $monthshown, $style, &
 							{
 								$tmpa = dol_getdate($event->date_start_in_calendar, true);
 								$tmpb = dol_getdate($event->date_end_in_calendar, true);
-								if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $cases2[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'hour', 'auto');
+								if ($tmpa['mday'] == $tmpb['mday'] && $tmpa['mon'] == $tmpb['mon'] && $tmpa['year'] == $tmpb['year']) $cases2[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'hour', 'tzuserrel');
 								else $cases2[$h][$event->id]['string'] .= '-'.dol_print_date($event->date_end_in_calendar, 'dayhour', 'tzuserrel');
 							}
 							if ($event->label) $cases2[$h][$event->id]['string'] .= ' - '.$event->label;

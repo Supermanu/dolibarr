@@ -1726,7 +1726,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 							// Hour start
 							if ($tmpyearstart == $annee && $tmpmonthstart == $mois && $tmpdaystart == $jour)
 							{
-								$daterange .= dol_print_date($event->date_start_in_calendar, 'hour', 'auto');
+								$daterange .= dol_print_date($event->date_start_in_calendar, 'hour', 'tzuserrel');
 								if ($event->date_end_in_calendar && $event->date_start_in_calendar != $event->date_end_in_calendar)
 								{
 									if ($tmpyearstart == $tmpyearend && $tmpmonthstart == $tmpmonthend && $tmpdaystart == $tmpdayend)
@@ -1746,7 +1746,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 							if ($event->date_end_in_calendar && $event->date_start_in_calendar != $event->date_end_in_calendar)
 							{
 								if ($tmpyearend == $annee && $tmpmonthend == $mois && $tmpdayend == $jour)
-								$daterange .= dol_print_date($event->date_end_in_calendar, 'hour', 'auto');
+								$daterange .= dol_print_date($event->date_end_in_calendar, 'hour', 'tzuserrel');
 							}
 						} else {
 							if ($showinfo)

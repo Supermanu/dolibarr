@@ -1044,7 +1044,7 @@ if (count($listofextcals))
 					$datestart = dol_stringtotime($icalevent['DTSTART;VALUE=DATE'], 1);
 					$dateend = dol_stringtotime($icalevent['DTEND;VALUE=DATE'], 1) - 1; // We remove one second to get last second of day
 					//print 'x'.$datestart.'-'.$dateend;exit;
-					//print dol_print_date($dateend,'dayhour','gmt');
+					//print dol_print_date($datestart,'dayhour','auto');
 					$event->fulldayevent = 1;
 					$addevent = true;
 				} elseif (!is_array($icalevent['DTSTART'])) // not fullday event (DTSTART is not array. It is a value like '19700101T000000Z' for 00:00 in greenwitch)
@@ -1550,9 +1550,9 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 	//var_dump($colorindexused);
 
 	foreach ($eventarray as $daykey => $notused) {		// daykey is the 'YYYYMMDD' to show according to user
-		$annee = dol_print_date($daykey, '%Y', 'gmt');	// We use gmt because we want the value represented by string 'YYYYMMDD'
-		$mois =  dol_print_date($daykey, '%m', 'gmt');	// We use gmt because we want the value represented by string 'YYYYMMDD'
-		$jour =  dol_print_date($daykey, '%d', 'gmt');	// We use gmt because we want the value represented by string 'YYYYMMDD'
+		$annee = dol_print_date($daykey, '%Y', 'tzuser');	// We use gmt because we want the value represented by string 'YYYYMMDD'
+		$mois =  dol_print_date($daykey, '%m', 'tzuser');	// We use gmt because we want the value represented by string 'YYYYMMDD'
+		$jour =  dol_print_date($daykey, '%d', 'tzuser');	// We use gmt because we want the value represented by string 'YYYYMMDD'
 
 		//print 'event daykey='.$daykey.' dol_print_date(daykey)='.dol_print_date($daykey, 'dayhour', 'gmt').' jour='.$jour.' mois='.$mois.' annee='.$annee."<br>\n";
 

@@ -563,7 +563,7 @@ if (!empty($conf->use_javascript_ajax))	// If javascript on
 $eventarray = array();
 
 $sql = 'SELECT ';
-if ($usergroup > 0) $sql .= " DISTINCT";
+if (!empty($filtert) || $usergroup > 0) $sql .= " DISTINCT";
 $sql .= ' a.id, a.label,';
 $sql .= ' a.datep,';
 $sql .= ' a.datep2,';

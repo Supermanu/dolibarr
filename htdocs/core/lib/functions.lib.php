@@ -2002,14 +2002,14 @@ function dol_print_date($time, $format = '', $tzoutput = 'auto', $outputlangs = 
 			} elseif ($tzoutput == 'tzuser' || $tzoutput == 'tzuserrel') {
 				$to_gmt = true;
 				$offsettzstring = (empty($_SESSION['dol_tz_string']) ? 'UTC' : $_SESSION['dol_tz_string']); // Example 'Europe/Berlin' or 'Indian/Reunion'
-								$offsetdst = (empty($_SESSION['dol_dst']) ? 0 : $_SESSION['dol_dst']) * 60 * 60; // Will not be used anymore
+
 				if (class_exists('DateTimeZone')) {
 					$user_date_tz = new DateTimeZone($offsettzstring);
 					$user_dt = new DateTime();
 					$user_dt->setTimezone($user_date_tz);
-					$user_dt->setTimestamp($time);
+					$user_dt->setTimestamp($tzoutput == 'tzuser' ? dol_now() : (int) $time);
 					$offsettz = $user_dt->getOffset();
-				} else {
+				} else {	// old method (The 'tzuser' was processed like the 'tzuserrel')
 					$offsettz = (empty($_SESSION['dol_tz']) ? 0 : $_SESSION['dol_tz']) * 60 * 60; // Will not be used anymore
 					$offsetdst = (empty($_SESSION['dol_dst']) ? 0 : $_SESSION['dol_dst']) * 60 * 60; // Will not be used anymore
 				}

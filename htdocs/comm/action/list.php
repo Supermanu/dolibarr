@@ -954,10 +954,10 @@ while ($i < min($num, $limit)) {
 	if (!empty($arrayfields['a.datep']['checked'])) {
 		print '<td class="center nowraponall">';
 		if (empty($obj->fulldayevent)) {
-			print dol_print_date($db->jdate($obj->dp), $formatToUse, 'tzuser');
+			print dol_print_date($db->jdate($obj->dp), $formatToUse, 'tzuserrel');
 		} else {
 			$tzforfullday = getDolGlobalString('MAIN_STORE_FULL_EVENT_IN_GMT');
-			print dol_print_date($db->jdate($obj->dp), $formatToUse, ($tzforfullday ? $tzforfullday : 'tzuser'));
+			print dol_print_date($db->jdate($obj->dp), $formatToUse, ($tzforfullday ? $tzforfullday : 'tzuserrel'));
 		}
 		$late = 0;
 		if ($actionstatic->hasDelay() && $actionstatic->percentage >= 0 && $actionstatic->percentage < 100 ) {
@@ -973,10 +973,10 @@ while ($i < min($num, $limit)) {
 	if (!empty($arrayfields['a.datep2']['checked'])) {
 		print '<td class="center nowraponall">';
 		if (empty($obj->fulldayevent)) {
-			print dol_print_date($db->jdate($obj->dp2), $formatToUse, 'tzuser');
+			print dol_print_date($db->jdate($obj->dp2), $formatToUse, 'tzuserrel');
 		} else {
 			$tzforfullday = getDolGlobalString('MAIN_STORE_FULL_EVENT_IN_GMT');
-			print dol_print_date($db->jdate($obj->dp2), $formatToUse, ($tzforfullday ? $tzforfullday : 'tzuser'));
+			print dol_print_date($db->jdate($obj->dp2), $formatToUse, ($tzforfullday ? $tzforfullday : 'tzuserrel'));
 		}
 		print '</td>';
 	}
@@ -1058,11 +1058,11 @@ while ($i < min($num, $limit)) {
 	// Date creation
 	if (!empty($arrayfields['a.datec']['checked'])) {
 		// Status/Percent
-		print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datec), 'dayhour', 'tzuser').'</td>';
+		print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datec), 'dayhour', 'tzuserrel').'</td>';
 	}
 	// Date update
 	if (!empty($arrayfields['a.tms']['checked'])) {
-		print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datem), 'dayhour', 'tzuser').'</td>';
+		print '<td align="center" class="nowrap">'.dol_print_date($db->jdate($obj->datem), 'dayhour', 'tzuserrel').'</td>';
 	}
 	if (!empty($arrayfields['a.percent']['checked'])) {
 		// Status/Percent

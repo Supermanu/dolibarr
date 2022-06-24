@@ -153,6 +153,8 @@ print '<div class="clearboth"></div>';
 
 print dol_get_fiche_end();
 
+print "<p><a href='/comm/action/list.php?search_projectid=". $object->id ."' class='butAction'>Voir les événements du projet dans l'agenda</a></p>";
+
 
 // Actions buttons
 

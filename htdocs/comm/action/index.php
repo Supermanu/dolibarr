@@ -580,6 +580,9 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 		$s .= 'frm.attr("action", newurl).children("#newdate").val(newval);frm.submit();}'."\n";
 		$s .= '});'."\n";
 	}
+	if ($mode == "show_month") {
+		$s .= 'jQuery(".check_showallevents").click(function() { for (let i = 0; i < $("div[id^=more_]").length; i++) {$("div[id^=more_]")[i].click()}});';
+	}
 	$s .= '});'."\n";
 	$s .= '</script>'."\n";
 
@@ -624,6 +627,11 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 
 	// Birthdays
 	$s .= '<div class="nowrap inline-block"><input type="checkbox" id="check_birthday" name="check_birthday" checked> '.$langs->trans("AgendaShowBirthdayEvents").' &nbsp; </div>';
+
+	// Show all events
+	if ($mode == "show_month") {
+		$s .= '<div class="nowrap inline-block"><input type="checkbox" id="check_showallevents" name="check_showallevents" class="check_showallevents"><label for="check_showallevents"> <span class="check_showallevents_text">Montrer tous les événements</span></label> &nbsp; </div>';
+	}
 
 	// Calendars from hooks
 	$parameters = array(); $object = null;

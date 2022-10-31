@@ -983,6 +983,9 @@ class ActionComm extends CommonObject
 		$error = 0;
 
 		dol_syslog(get_class($this)."::delete", LOG_DEBUG);
+		dol_syslog("EVT::Suppr. de ". $this->id ." (". $this->label .")", LOG_ALERT);
+		dol_syslog("EVT::Utilisateur ". $user->login , LOG_ALERT);
+		dol_syslog("EVT::Date de l'evt ". date("Y-m-d", $this->datep) , LOG_ALERT);
 
 		$this->db->begin();
 
@@ -1170,6 +1173,12 @@ class ActionComm extends CommonObject
 		$sql .= " WHERE id=".$this->id;
 
 		dol_syslog(get_class($this)."::update", LOG_DEBUG);
+
+		dol_syslog("EVT::Modif. de ". $this->id ." (". $this->label .")", LOG_ALERT);
+		dol_syslog("EVT::Utilisateur ". $user->login , LOG_ALERT);
+		dol_syslog("EVT::Date de l'evt ". date("Y-m-d", $this->datep) , LOG_ALERT);
+		dol_syslog("EVT::Description ". $this->db->escape($this->note_private) , LOG_ALERT);
+
 		if ($this->db->query($sql)) {
 			$action = 'update';
 

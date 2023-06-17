@@ -658,6 +658,11 @@ class ActionComm extends CommonObject
 
 			if (!$error) {
 				$this->db->commit();
+
+				dol_syslog("EVT::Creation de ". $this->id ." (". $this->label .")", LOG_ALERT);
+				dol_syslog("EVT::Utilisateur ". $user->login , LOG_ALERT);
+				dol_syslog("EVT::Description ". $this->db->escape($this->note_private) , LOG_ALERT);
+				dol_syslog("EVT::Date de l'evt ". date("Y-m-d", $this->datep) , LOG_ALERT);
 				return $this->id;
 			} else {
 				$this->db->rollback();

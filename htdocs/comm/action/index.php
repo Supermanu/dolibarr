@@ -597,7 +597,7 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 
 	$s .= '<script type="text/javascript">'."\n";
 	$s .= 'jQuery(document).ready(function () {'."\n";
-	$s .= 'jQuery(".check_birthday").click(function() { console.log("Toggle birthdays"); jQuery(".family_birthday").toggle(); });'."\n";
+	$s .= 'jQuery("#check_birthday").click(function() { console.log("Toggle birthdays"); jQuery(".family_birthday").toggle(); });'."\n";
 	$s .= 'jQuery(".check_holiday").click(function() { console.log("Toggle holidays"); jQuery(".family_holiday").toggle(); });'."\n";
 	if (isModEnabled("bookcal") && !empty($bookcalcalendars["calendars"])) {
 		foreach ($bookcalcalendars["calendars"] as $key => $value) {
@@ -671,7 +671,7 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 	}
 
 	// Birthdays
-	$s .= '<div class="nowrap inline-block minheight30"><input type="checkbox" id="check_birthday" name="check_birthday" class="check_birthday"><label for="check_birthday" class="labelcalendar"> <span class="check_birthday_text">'.$langs->trans("AgendaShowBirthdayEvents").'</span></label> &nbsp; </div>';
+	$s .= '<div class="nowrap inline-block minheight30"><input type="checkbox" id="check_birthday" name="check_birthday" checked>'.$langs->trans("AgendaShowBirthdayEvents").'</span></label> &nbsp; </div>';
 
 	// Bookcal Calendar
 	if (isModEnabled("bookcal")) {
@@ -2020,7 +2020,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 						$morecss = 'showifmore';
 					}
 					if ($event->type == 'birthdate' && !GETPOST('check_birthday')) {
-						$morecss = 'hidden';
+						// $morecss = 'hidden';
 					}
 					if ($event->type == 'holiday' && !GETPOST('check_holiday')) {
 						$morecss = 'hidden';

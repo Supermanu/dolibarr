@@ -56,14 +56,18 @@ $disabledefaultvalues = GETPOSTINT('disabledefaultvalues');
 
 $check_holiday = GETPOSTINT('check_holiday');
 $filter = GETPOST("search_filter", 'alpha', 3) ? GETPOST("search_filter", 'alpha', 3) : GETPOST("filter", 'alpha', 3);
-$filtert = GETPOST("search_filtert", "intcomma", 3) ? GETPOST("search_filtert", "intcomma", 3) : GETPOST("filtert", "intcomma", 3);
+if (GETPOST("search_filtert")) {
+	$filtert = is_string(GETPOST("search_filtert")) ? explode(",", GETPOST("search_filtert")) : GETPOST("search_filtert");
+} else {
+	$filtert = GETPOST("filtert");
+}
 $usergroup = GETPOST("search_usergroup", "intcomma", 3) ? GETPOST("search_usergroup", "intcomma", 3) : GETPOST("usergroup", "intcomma", 3);
 $showbirthday = empty($conf->use_javascript_ajax) ? GETPOSTINT("showbirthday") : 1;
 $search_categ_cus = GETPOST("search_categ_cus", 'intcomma', 3) ? GETPOST("search_categ_cus", 'intcomma', 3) : 0;
 
 // If not choice done on calendar owner (like on left menu link "Agenda"), we filter on user.
 if (empty($filtert) && !getDolGlobalString('AGENDA_ALL_CALENDARS')) {
-	$filtert = $user->id;
+	$filtert = array($user->id);
 }
 
 $newparam = '';
@@ -100,7 +104,7 @@ if (!$user->hasRight('agenda', 'allactions', 'read')) {
 	$canedit = 0;
 }
 if (!$user->hasRight('agenda', 'allactions', 'read') || $filter == 'mine') {  // If no permission to see all, we show only affected to me
-	$filtert = $user->id;
+	$filtert = array($user->id);
 }
 
 $action = GETPOST('action', 'aZ09');
@@ -405,7 +409,7 @@ if ($filter) {
 	$param .= "&search_filter=".urlencode($filter);
 }
 if ($filtert) {
-	$param .= "&search_filtert=".urlencode($filtert);
+	if ($filtert) $param .= "&search_filtert=".urlencode(implode(",", $filtert));
 }
 if ($usergroup > 0) {
 	$param .= "&search_usergroup=".urlencode((string) ($usergroup));
@@ -716,7 +720,7 @@ $eventarray = array();
 
 // DEFAULT CALENDAR + AUTOEVENT CALENDAR + CONFERENCEBOOTH CALENDAR
 $sql = 'SELECT ';
-if ($usergroup > 0) {
+if (!empty($filtert) || $usergroup > 0) {
 	$sql .= " DISTINCT";
 }
 $sql .= ' a.id, a.label,';
@@ -739,7 +743,7 @@ if ($resourceid > 0) {
 	$sql .= ", ".MAIN_DB_PREFIX."element_resources as r";
 }
 // We must filter on assignment table
-if ($filtert > 0 || $usergroup > 0) {
+if (!empty($filtert) || $usergroup > 0) {
 	$sql .= ", ".MAIN_DB_PREFIX."actioncomm_resources as ar";
 }
 if ($usergroup > 0) {
@@ -800,7 +804,7 @@ if ($socid) {
 	$sql .= " AND a.fk_soc = ".((int) $socid);
 }
 // We must filter on assignment table
-if ($filtert > 0 || $usergroup > 0) {
+if (!empty($filtert) || $usergroup > 0) {
 	$sql .= " AND ar.fk_actioncomm = a.id AND ar.element_type='user'";
 }
 //var_dump($day.' '.$month.' '.$year);
@@ -850,13 +854,13 @@ if ($status == 'todo') {
 	$sql .= " AND (a.percent >= 0 AND a.percent < 100)";
 }
 // We must filter on assignment table
-if ($filtert > 0 || $usergroup > 0) {
+if (!empty($filtert) || $usergroup > 0) {
 	$sql .= " AND (";
-	if ($filtert > 0) {
-		$sql .= "ar.fk_element = ".((int) $filtert);
+	for ($u = 0; $u < count($filtert); $u++) {
+		$sql .= "ar.fk_element = ".$filtert[$u]. ($u + 1 == count($filtert) ? "" : " OR ");
 	}
 	if ($usergroup > 0) {
-		$sql .= ($filtert > 0 ? " OR " : "")." ugu.fk_usergroup = ".((int) $usergroup);
+		$sql .= (!empty($filtert) ? " OR " : "")." ugu.fk_usergroup = ".$usergroup;
 	}
 	$sql .= ")";
 }
@@ -2282,7 +2286,7 @@ function show_day_events($db, $day, $month, $year, $monthshown, $style, &$eventa
 				} else {
 					print '<a href="'.DOL_URL_ROOT.'/comm/action/index.php?mode='.$mode.'&maxprint=0&month='.((int) $monthshown).'&year='.((int) $year);
 					print($status ? '&status='.$status : '').($filter ? '&filter='.urlencode($filter) : '');
-					print($filtert ? '&search_filtert='.urlencode((string) $filtert) : '');
+					print (!empty($filtert) ? '&search_filtert='.implode(",", $filtert) : '');
 					print($usergroup ? '&search_usergroup='.urlencode($usergroup) : '');
 					print($actioncode != '' ? '&search_actioncode='.urlencode($actioncode) : '');
 					print '">'.img_picto("all", "1downarrow_selected.png").' ...';

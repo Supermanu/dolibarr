@@ -2510,7 +2510,7 @@ class Form
 			$out .= ' else { jQuery("#' . $action . 'assignedtouser").attr("disabled", true); }';
 			$out .= '});';
 			$out .= '})</script>';
-			$out .= $this->select_dolusers('', $htmlname, $show_empty, $exclude, $disabled, $include, $enableonly, $force_entity, $maxlength, $showstatus, $morefilter);
+			$out .= $this->select_dolusers('', $htmlname, $show_empty, $exclude, $disabled, $include, $enableonly, $force_entity, $maxlength, $showstatus, $morefilter, 0, '', '', 0, 0, $multiple=true);
 			$out .= ' <input type="submit" disabled class="button valignmiddle smallpaddingimp reposition" id="' . $action . 'assignedtouser" name="' . $action . 'assignedtouser" value="' . dol_escape_htmltag($langs->trans("Add")) . '">';
 			$out .= '<br>';
 		}

@@ -1543,7 +1543,7 @@ if (empty($mode) || $mode == 'show_month') {      // View by month
 	print_actions_filter($form, $canedit, $status, $year, $month, $day, $showbirthday, 0, $filtert, 0, $pid, $socid, $action, -1, $actioncode, $usergroup, '', $resourceid, $search_categ_cus);
 	print '</div>';
 
-	print '<div class="div-table-responsive-no-min sectioncalendarbymonth maxscreenheightless300">';
+	print '<div class="div-table-responsive-no-min sectioncalendarbymonth">';
 	print '<table class="centpercent noborder nocellnopadd cal_pannel cal_month">';
 	print ' <tr class="liste_titre">';
 	// Column title of weeks numbers
@@ -1654,7 +1654,7 @@ if (empty($mode) || $mode == 'show_month') {      // View by month
 	print_actions_filter($form, $canedit, $status, $year, $month, $day, $showbirthday, 0, $filtert, 0, $pid, $socid, $action, -1, $actioncode, $usergroup, '', $resourceid);
 	print '</div>';
 
-	print '<div class="div-table-responsive-no-min sectioncalendarbyweek maxscreenheightless300">';
+	print '<div class="div-table-responsive-no-min sectioncalendarbyweek">';
 	print '<table class="centpercent noborder nocellnopadd cal_pannel cal_month">';
 	print ' <tr class="liste_titre">';
 	$i = 0;

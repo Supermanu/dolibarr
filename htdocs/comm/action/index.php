@@ -622,6 +622,13 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 		$s .= 'frm.attr("action", newurl).children("#newdate").val(newval);frm.submit();}'."\n";
 		$s .= '});'."\n";
 	}
+	if ($mode == "show_month") {
+		$s .= 'jQuery(".check_showallevents").click(function() {';
+		$s .= 'const isChecked = jQuery("#check_showallevents")[0].checked;';
+		$s .= 'const displayEvents = isChecked ? "none" : "block";';
+		$s .= 'if (isChecked) {jQuery(".showifmore").show()} else {jQuery(".showifmore").hide()};';
+		$s .= '});';
+	}
 	$s .= '});'."\n";
 	$s .= '</script>'."\n";
 
@@ -677,6 +684,10 @@ if (!empty($conf->use_javascript_ajax)) {	// If javascript on
 	// Birthdays
 	$s .= '<div class="nowrap inline-block minheight30"><input type="checkbox" id="check_birthday" name="check_birthday" checked>'.$langs->trans("AgendaShowBirthdayEvents").'</span></label> &nbsp; </div>';
 
+	// Show all events
+	if ($mode == "show_month") {
+		$s .= '<div class="nowrap inline-block"><input type="checkbox" id="check_showallevents" name="check_showallevents" class="check_showallevents"><label for="check_showallevents"> <span class="check_showallevents_text">Montrer tous les événements</span></label> &nbsp; </div>';
+	}
 	// Bookcal Calendar
 	if (isModEnabled("bookcal")) {
 		if (!empty($bookcalcalendars["calendars"])) {

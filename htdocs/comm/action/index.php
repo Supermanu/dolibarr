@@ -2381,6 +2381,15 @@ function sort_events_by_date($a, $b)
 		return 1;
 	}
 
+	// Set all day events at the end.
+	if ($a->datef - $a->datep >= 80000) {
+		return 1;
+	}
+
+	if ($b->datef - $b->datep >= 80000) {
+		return -1;
+	}
+
 	// datep => Event start time
 	// datef => Event end time
 

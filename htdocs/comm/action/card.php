@@ -1281,6 +1281,29 @@ if ($action == 'create') {
 		print '</td></tr>';
 	}
 
+	print '<script>';
+	print 'const pubActions = jQuery("#actioncode option[value^=\'AC_PUB_\']");';
+	$projectid = GETPOSTINT('projectid');
+	if (!empty($projectid)) {
+		// Category 19 is publication.
+		$sqlsearch = 'SELECT fk_categorie FROM llx_categorie_project WHERE fk_project = '. $projectid .' AND fk_categorie = 19;';
+		$result = $db->query($sqlsearch);
+		if ($result->num_rows > 0) {
+			// The parent project is a publication, hide "Congés", "Intervision", "Animation" and "Formation".
+			print 'jQuery("#actioncode option[value^=\'AC_ANIM\']").remove();';
+			print 'jQuery("#actioncode option[value^=\'AC_INTERVISI\']").remove();';
+			print 'jQuery("#actioncode option[value^=\'AC_FORMATION\']").remove();';
+			print 'jQuery("#actioncode option[value^=\'AC_CONGE\']").remove();';
+		} else {
+			// Hide publication actions.
+			print 'pubActions.remove();';
+		}
+	} else {
+		// Hide publication actions.
+		print 'pubActions.remove();';
+	}
+	print '</script>';
+
 	// Title
 	print '<tr><td'.(!getDolGlobalString('AGENDA_USE_EVENT_TYPE') ? ' class="fieldrequired titlefieldcreate"' : '').'>'.$langs->trans("Title").'</td><td><input type="text" id="label" name="label" class="soixantepercent" value="'.GETPOST('label').'"></td></tr>';
 
@@ -1854,6 +1877,27 @@ if ($id > 0) {
 			if ($object->type_code != 'AC_OTH_AUTO') {
 				print img_picto($langs->trans("ActionType"), 'square', 'class="fawidth30 inline-block" style="color: #ddd;"');
 				print $formactions->select_type_actions(GETPOST("actioncode", 'aZ09') ? GETPOST("actioncode", 'aZ09') : $object->type_code, "actioncode", "systemauto", 0, 0, 0, 1);
+				print '<script>';
+				print 'const pubActions = jQuery("#actioncode option[value^=\'AC_PUB_\']");';
+				if (!empty($object->fk_project)) {
+					// Category 19 is publication.
+					$sqlsearch = 'SELECT fk_categorie FROM llx_categorie_project WHERE fk_project = '. $object->fk_project .' AND fk_categorie = 19;';
+					$result = $db->query($sqlsearch);
+					if ($result->num_rows > 0) {
+						// The parent project is a publication, hide "Congés", "Intervision", "Animation" and "Formation".
+						print 'jQuery("#actioncode option[value^=\'AC_ANIM\']").remove();';
+						print 'jQuery("#actioncode option[value^=\'AC_INTERVISI\']").remove();';
+						print 'jQuery("#actioncode option[value^=\'AC_FORMATION\']").remove();';
+						print 'jQuery("#actioncode option[value^=\'AC_CONGE\']").remove();';
+					} else {
+						// Hide publication actions.
+						print 'pubActions.remove();';
+					}
+				} else {
+					// Hide publication actions.
+					print 'pubActions.remove();';
+				}
+				print '</script>';
 			} else {
 				print '<input type="hidden" name="actioncode" value="'.$object->type_code.'">';
 				print $object->getTypePicto();
